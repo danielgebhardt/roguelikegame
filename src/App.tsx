@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import LevelMap from "./levels/LevelMap";
+import {useEffect} from "react";
+import LevelGenerator from "./levels/LevelGenerator";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const DIMENSIONS = 30;
+const MAX_TUNNELS = 120;
+const MAX_TUNNEL_LENGTH = 10;
+
+export default function App () {
+
+    // useEffect(() => {
+    //     const currentLevel = (m: number, n: number) => [...Array(m)].map(e => Array(n).fill('#'));
+    //
+    //     console.log(currentLevel(10, 10));
+    //
+    // }, []);
+
+    return (
+        <>
+            {/*<LevelMap mapDimensions={DIMENSIONS} mapMaxTunnelLength={MAX_TUNNEL_LENGTH} mapMaxTunnels={MAX_TUNNELS} />*/}
+            <LevelGenerator />
+        </>
+    );
 }
 
-export default App;
