@@ -1,13 +1,15 @@
 import {Leaf} from "./Leaf";
+import getRandom from "../libraries/getRandom";
 
 const LevelGenerator = () => {
-    const generateLevel = (m: number, n: number) => [...Array(m)].map(e => Array(n).fill('#'));
-
     const MAX_LEAF_SIZE = 20;
     const MIN_LEAF_SIZE = 6;
-    const LEVEL_WIDTH = 50;
-    const LEVEL_HEIGHT = 50;
+    const LEVEL_WIDTH = 40;
+    const LEVEL_HEIGHT = 40;
 
+    const generateLevel = (m: number, n: number) => [...Array(m)].map(e => Array(n).fill('#'));
+
+    // initiate array of current level. For now, must be a square or it breaks for some reason
     const currentLevel = generateLevel(LEVEL_WIDTH, LEVEL_HEIGHT);
 
     let leafs: Leaf[] = [];
@@ -16,7 +18,7 @@ const LevelGenerator = () => {
 
     let didSplit = true;
 
-// we loop through every Leaf in our Vector over and over again, until no more Leafs can be split.
+    // we loop through every Leaf in our Vector over and over again, until no more Leafs can be split.
     while (didSplit) {
         didSplit = false;
 
@@ -38,6 +40,28 @@ const LevelGenerator = () => {
     }
 
     rootLeaf.createRooms();
+
+    // Set character starting position
+    let foundRoom = false;
+    while(!foundRoom) {
+        let randomRoom = getRandom(0, leafs.length);
+        console.log(randomRoom);
+
+        if(leafs[randomRoom].room) {
+            foundRoom = true;
+            console.log("found room", leafs[randomRoom].room);
+            const startingRoom = leafs[randomRoom].room;
+
+            let randomXInRoom = getRandom(startingRoom.x + 1, startingRoom.x + startingRoom.width - 1);
+            let randomYInRoom = getRandom(startingRoom.y + 1, startingRoom.y + startingRoom.height - 1);
+
+            console.log(randomXInRoom, randomYInRoom);
+
+            currentLevel[randomXInRoom][randomYInRoom] = '@';
+        }
+    }
+
+
 
 
     return (

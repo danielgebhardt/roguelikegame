@@ -1,5 +1,5 @@
 import './App.css';
-import LevelMap from "./levels/LevelMap";
+import LevelMap from "./unused-old/LevelMap";
 import {useEffect} from "react";
 import LevelGenerator from "./levels/LevelGenerator";
 

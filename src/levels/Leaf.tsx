@@ -1,4 +1,4 @@
-import levelMap from "./LevelMap";
+import getRandom from "../libraries/getRandom";
 
 export type roomCoords = {
     x: number,
@@ -55,13 +55,13 @@ export class Leaf {
             // this Leaf is ready to make a room
 
             // the room can be between 3 x 3 tiles to the size of the leaf - 2.
-            let roomSize = {width: this.getRandom(3, this.width - 2), height: this.getRandom(3, this.height - 2)};
+            let roomSize = {width: getRandom(3, this.width - 2), height: getRandom(3, this.height - 2)};
             //console.log(roomSize);
 
             // place the room within the Leaf, but don't put it right against the side of the Leaf (that would merge rooms together)
             let roomPos = {
-                x: this.getRandom(1, this.width - roomSize.width - 1),
-                y: this.getRandom(1, this.height - roomSize.height - 1)
+                x: getRandom(1, this.width - roomSize.width - 1),
+                y: getRandom(1, this.height - roomSize.height - 1)
             };
 
             this.room = {x: this.x + roomPos.x, y: this.y + roomPos.y, width: roomSize.width, height: roomSize.height};
@@ -74,7 +74,7 @@ export class Leaf {
         for (let i = x; i < x + width; i++) {
             for (let j = y; j < y + height; j++) {
                 try {
-                    this.levelMap[j][i] = character;
+                    this.levelMap[i][j] = character;
                 } catch (error) {
                     console.log(x, y, width, height, error);
                 }
@@ -82,9 +82,9 @@ export class Leaf {
         }
     }
 
-    getRandom(minRandom: number, maxRandom: number) {
-        return Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom;
-    }
+    // getRandom(minRandom: number, maxRandom: number) {
+    //     return Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom;
+    // }
 
     getRoom(): roomCoords | null {
         if(this.room) {
@@ -123,13 +123,13 @@ export class Leaf {
         const halls: roomCoords[] = [];
 
         const point1 = {
-            x: this.getRandom(l!.x + 1, l!.x + l!.width - 2),
-            y: this.getRandom(l!.y + 1, l!.y + l!.height - 2)
+            x: getRandom(l!.x + 1, l!.x + l!.width - 2),
+            y: getRandom(l!.y + 1, l!.y + l!.height - 2)
         };
 
         const point2 = {
-            x: this.getRandom(r!.x + 1, r!.x + r!.width - 2),
-            y: this.getRandom(r!.y + 1, r!.y + r!.height - 2)
+            x: getRandom(r!.x + 1, r!.x + r!.width - 2),
+            y: getRandom(r!.y + 1, r!.y + r!.height - 2)
         };
 
         const w: number = point2.x - point1.x;
@@ -244,7 +244,7 @@ export class Leaf {
         }
 
         // randomly decide where to split this leaf
-        const split: number = this.getRandom(this.MIN_LEAF_SIZE, max);
+        const split: number = getRandom(this.MIN_LEAF_SIZE, max);
 
         // create left and right children depending on direction of the split
         if (splitHeight) {
