@@ -164,3 +164,7 @@ td {
     font-size: 1em;
   }
 }
+
+.character {
+  background-color: #fff;
+}

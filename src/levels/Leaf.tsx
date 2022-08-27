@@ -1,22 +1,22 @@
 import getRandom from "../libraries/getRandom";
 
 export type roomCoords = {
-    x: number,
-    y: number,
-    width: number,
-    height: number;
+    rowNumber: number,
+    columnNumber: number,
+    rows: number,
+    columns: number;
 }
 
 export type point = {
-    x: number,
-    y: number
+    rowNumber: number,
+    columnNumber: number
 };
 
 export class Leaf {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+    rowNumber: number;
+    columnNumber: number;
+    rows: number;
+    columns: number;
     leftChild!: Leaf;
     rightChild!: Leaf;
     MIN_LEAF_SIZE: number;
@@ -24,11 +24,11 @@ export class Leaf {
     halls!: number[];
     levelMap: string[][];
 
-    constructor(intX: number, intY: number, intWidth: number, intHeight: number, minLeafSize: number, currentLevel: string[][]) {
-        this.x = intX;
-        this.y = intY;
-        this.width = intWidth;
-        this.height = intHeight;
+    constructor(intRowNumber: number, intColumnNumber: number, numRows: number, intColumns: number, minLeafSize: number, currentLevel: string[][]) {
+        this.rowNumber = intRowNumber;
+        this.columnNumber = intColumnNumber;
+        this.rows = numRows;
+        this.columns = intColumns;
         this.MIN_LEAF_SIZE = minLeafSize;
         this.levelMap = currentLevel;
     }
@@ -55,28 +55,28 @@ export class Leaf {
             // this Leaf is ready to make a room
 
             // the room can be between 3 x 3 tiles to the size of the leaf - 2.
-            let roomSize = {width: getRandom(3, this.width - 2), height: getRandom(3, this.height - 2)};
+            let roomSize = {width: getRandom(3, this.rows - 2), columns: getRandom(3, this.columns - 2)};
             //console.log(roomSize);
 
             // place the room within the Leaf, but don't put it right against the side of the Leaf (that would merge rooms together)
             let roomPos = {
-                x: getRandom(1, this.width - roomSize.width - 1),
-                y: getRandom(1, this.height - roomSize.height - 1)
+                rowNumber: getRandom(1, this.rows - roomSize.width - 1),
+                columnNumber: getRandom(1, this.columns - roomSize.columns - 1)
             };
 
-            this.room = {x: this.x + roomPos.x, y: this.y + roomPos.y, width: roomSize.width, height: roomSize.height};
-            this.changeMapCharacters(this.room.x, this.room.y, this.room.width, this.room.height, ' ');
+            this.room = {rowNumber: this.rowNumber + roomPos.rowNumber, columnNumber: this.columnNumber + roomPos.columnNumber, rows: roomSize.width, columns: roomSize.columns};
+            this.changeMapCharacters(this.room.rowNumber, this.room.columnNumber, this.room.rows, this.room.columns, ' ');
         }
     }
 
-    changeMapCharacters(x: number, y: number, width: number, height: number, character: string) {
+    changeMapCharacters(rowNumber: number, columnNumber: number, width: number, columns: number, character: string) {
         // added later to fill out a passed in array for displaying purposes
-        for (let i = x; i < x + width; i++) {
-            for (let j = y; j < y + height; j++) {
+        for (let i = rowNumber; i < rowNumber + width; i++) {
+            for (let j = columnNumber; j < columnNumber + columns; j++) {
                 try {
                     this.levelMap[i][j] = character;
                 } catch (error) {
-                    console.log(x, y, width, height, error);
+                    console.log(rowNumber, columnNumber, width, columns, error);
                 }
             }
         }
@@ -123,17 +123,17 @@ export class Leaf {
         const halls: roomCoords[] = [];
 
         const point1 = {
-            x: getRandom(l!.x + 1, l!.x + l!.width - 2),
-            y: getRandom(l!.y + 1, l!.y + l!.height - 2)
+            rowNumber: getRandom(l!.rowNumber + 1, l!.rowNumber + l!.rows - 2),
+            columnNumber: getRandom(l!.columnNumber + 1, l!.columnNumber + l!.columns - 2)
         };
 
         const point2 = {
-            x: getRandom(r!.x + 1, r!.x + r!.width - 2),
-            y: getRandom(r!.y + 1, r!.y + r!.height - 2)
+            rowNumber: getRandom(r!.rowNumber + 1, r!.rowNumber + r!.rows - 2),
+            columnNumber: getRandom(r!.columnNumber + 1, r!.columnNumber + r!.columns - 2)
         };
 
-        const w: number = point2.x - point1.x;
-        const h: number = point2.y - point1.y;
+        const w: number = point2.rowNumber - point1.rowNumber;
+        const h: number = point2.columnNumber - point1.columnNumber;
 
         if (w < 0)
         {
@@ -141,31 +141,31 @@ export class Leaf {
             {
                 if (Math.random() < 0.5)
                 {
-                    halls.push({x: point2.x, y: point1.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point2.x, y: point2.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
                 else
                 {
-                    halls.push({x: point2.x, y: point2.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point1.x, y: point2.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
             }
             else if (h > 0)
             {
                 if (Math.random() < 0.5)
                 {
-                    halls.push({x: point2.x, y: point1.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point2.x, y: point1.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
                 else
                 {
-                    halls.push({x: point2.x, y: point2.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point1.x, y: point1.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
             }
             else // if (h == 0)
             {
-                halls.push({x: point2.x, y: point2.y, width: Math.abs(w), height: 1});
+                halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
             }
         }
         else if (w > 0)
@@ -174,47 +174,47 @@ export class Leaf {
             {
                 if (Math.random() < 0.5)
                 {
-                    halls.push({x: point1.x, y: point2.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point1.x, y: point2.y, width: 1, height: Math.abs(h)});;
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});;
                 }
                 else
                 {
-                    halls.push({x: point1.x, y: point1.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point2.x, y: point2.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
             }
             else if (h > 0)
             {
                 if (Math.random() < 0.5)
                 {
-                    halls.push({x: point1.x, y: point1.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point2.x, y: point1.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
                 else
                 {
-                    halls.push({x: point1.x, y: point2.y, width: Math.abs(w), height: 1});
-                    halls.push({x: point1.x, y: point1.y, width: 1, height: Math.abs(h)});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
+                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
                 }
             }
             else // if (h == 0)
             {
-                halls.push({x: point1.x, y: point1.y, width: Math.abs(w), height: 1});
+                halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
             }
         }
         else // if (w == 0)
         {
             if (h < 0)
             {
-                halls.push({x: point2.x, y: point2.y, width: 1, height: Math.abs(h)});
+                halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
             }
             else if (h > 0)
             {
-                halls.push({x: point1.x, y: point1.y, width: 1, height: Math.abs(h)});
+                halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
             }
         }
 
         for (const eachHall of halls) {
-            this.changeMapCharacters(eachHall.x, eachHall.y, eachHall.width, eachHall.height, ' ');
+            this.changeMapCharacters(eachHall.rowNumber, eachHall.columnNumber, eachHall.rows, eachHall.columns, ' ');
         }
     }
 
@@ -230,14 +230,14 @@ export class Leaf {
         // otherwise default to random split
         let splitHeight: boolean = (Math.random() > 0.5);
 
-        if ((this.width > this.height) && (this.width / this.height >= 1.25)) {
+        if ((this.rows > this.columns) && (this.rows / this.columns >= 1.25)) {
             splitHeight = false;
-        } else if ((this.height > this.width) && (this.height / this.width >= 1.25)) {
+        } else if ((this.columns > this.rows) && (this.columns / this.rows >= 1.25)) {
             splitHeight = true;
         }
 
-        // determine max height or width depending on splitHeight
-        let max: number = (splitHeight ? this.height : this.width) - this.MIN_LEAF_SIZE;
+        // determine max columns or width depending on splitHeight
+        let max: number = (splitHeight ? this.columns : this.rows) - this.MIN_LEAF_SIZE;
 
         if (max <= this.MIN_LEAF_SIZE) {
             return false; // too small to split more
@@ -248,11 +248,11 @@ export class Leaf {
 
         // create left and right children depending on direction of the split
         if (splitHeight) {
-            this.leftChild = new Leaf(this.x, this.y, this.width, split, this.MIN_LEAF_SIZE, this.levelMap);
-            this.rightChild = new Leaf(this.x, this.y + split, this.width, this.height - split, this.MIN_LEAF_SIZE, this.levelMap);
+            this.leftChild = new Leaf(this.rowNumber, this.columnNumber, this.rows, split, this.MIN_LEAF_SIZE, this.levelMap);
+            this.rightChild = new Leaf(this.rowNumber, this.columnNumber + split, this.rows, this.columns - split, this.MIN_LEAF_SIZE, this.levelMap);
         } else {
-            this.leftChild = new Leaf(this.x, this.y, split, this.height, this.MIN_LEAF_SIZE, this.levelMap);
-            this.rightChild = new Leaf(this.x + split, this.y, this.width - split, this.height, this.MIN_LEAF_SIZE, this.levelMap);
+            this.leftChild = new Leaf(this.rowNumber, this.columnNumber, split, this.columns, this.MIN_LEAF_SIZE, this.levelMap);
+            this.rightChild = new Leaf(this.rowNumber + split, this.columnNumber, this.rows - split, this.columns, this.MIN_LEAF_SIZE, this.levelMap);
         }
 
         return true;
