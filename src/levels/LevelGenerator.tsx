@@ -50,21 +50,21 @@ const levelGenerator = ():GeneratedLevel => {
     let foundRoom = false;
     while (!foundRoom) {
         let randomRoom = getRandom(0, leafs.length);
-        console.log(randomRoom);
+        // console.log(randomRoom);
 
         if (leafs[randomRoom].room) {
             foundRoom = true;
-            console.log("found room", leafs[randomRoom].room);
+            // console.log("found room", leafs[randomRoom].room);
             const startingRoom = leafs[randomRoom].room;
 
             let randomXInRoom = getRandom(startingRoom.rowNumber, startingRoom.rowNumber + startingRoom.rows - 1);
             let randomYInRoom = getRandom(startingRoom.columnNumber, startingRoom.columnNumber + startingRoom.columns - 1);
 
-            console.log(randomXInRoom, randomYInRoom);
+            // console.log(randomXInRoom, randomYInRoom);
 
             currentLevel[randomXInRoom][randomYInRoom] = '@';
 
-            console.log({row: randomXInRoom, column: randomYInRoom});
+            // console.log({row: randomXInRoom, column: randomYInRoom});
             startingPosition = {rowNumber: randomXInRoom, columnNumber: randomYInRoom};
         }
     }
