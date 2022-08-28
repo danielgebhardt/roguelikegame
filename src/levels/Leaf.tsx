@@ -46,8 +46,7 @@ export class Leaf {
             }
 
             // if there are both left and right children in this Leaf, create a hallway between them
-            if (this.leftChild && this.rightChild)
-            {
+            if (this.leftChild && this.rightChild) {
                 this.createHall(this.leftChild.getRoom(), this.rightChild.getRoom());
             }
 
@@ -64,7 +63,12 @@ export class Leaf {
                 columnNumber: getRandom(1, this.columns - roomSize.columns - 1)
             };
 
-            this.room = {rowNumber: this.rowNumber + roomPos.rowNumber, columnNumber: this.columnNumber + roomPos.columnNumber, rows: roomSize.width, columns: roomSize.columns};
+            this.room = {
+                rowNumber: this.rowNumber + roomPos.rowNumber,
+                columnNumber: this.columnNumber + roomPos.columnNumber,
+                rows: roomSize.width,
+                columns: roomSize.columns
+            };
             this.changeMapCharacters(this.room.rowNumber, this.room.columnNumber, this.room.rows, this.room.columns, ' ');
         }
     }
@@ -87,27 +91,27 @@ export class Leaf {
     // }
 
     getRoom(): roomCoords | null {
-        if(this.room) {
+        if (this.room) {
             return this.room;
         } else {
             let leftRoom: roomCoords | null = null;
             let rightRoom: roomCoords | null = null;
 
-            if(this.leftChild) {
+            if (this.leftChild) {
                 leftRoom = this.leftChild.getRoom();
             }
 
-            if(this.rightChild) {
+            if (this.rightChild) {
                 rightRoom = this.rightChild.getRoom();
             }
 
-            if(!leftRoom && !rightRoom) {
+            if (!leftRoom && !rightRoom) {
                 return null;
-            } else if(!rightRoom) {
+            } else if (!rightRoom) {
                 return leftRoom;
-            } else if(!leftRoom) {
+            } else if (!leftRoom) {
                 return rightRoom;
-            } else if(Math.random() > 0.5) {
+            } else if (Math.random() > 0.5) {
                 return leftRoom;
             } else {
                 return rightRoom;
@@ -135,81 +139,155 @@ export class Leaf {
         const w: number = point2.rowNumber - point1.rowNumber;
         const h: number = point2.columnNumber - point1.columnNumber;
 
-        if (w < 0)
+        if (w < 0) {
+            if (h < 0) {
+                if (Math.random() < 0.5) {
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                } else {
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                }
+            } else if (h > 0) {
+                if (Math.random() < 0.5) {
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                } else {
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                }
+            } else // if (h == 0)
+            {
+                halls.push({
+                    rowNumber: point2.rowNumber,
+                    columnNumber: point2.columnNumber,
+                    rows: Math.abs(w),
+                    columns: 1
+                });
+            }
+        } else if (w > 0) {
+            if (h < 0) {
+                if (Math.random() < 0.5) {
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+
+                } else {
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                }
+            } else if (h > 0) {
+                if (Math.random() < 0.5) {
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point2.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                } else {
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point2.columnNumber,
+                        rows: Math.abs(w),
+                        columns: 1
+                    });
+                    halls.push({
+                        rowNumber: point1.rowNumber,
+                        columnNumber: point1.columnNumber,
+                        rows: 1,
+                        columns: Math.abs(h)
+                    });
+                }
+            } else // if (h == 0)
+            {
+                halls.push({
+                    rowNumber: point1.rowNumber,
+                    columnNumber: point1.columnNumber,
+                    rows: Math.abs(w),
+                    columns: 1
+                });
+            }
+        } else // if (w == 0)
         {
-            if (h < 0)
-            {
-                if (Math.random() < 0.5)
-                {
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-                else
-                {
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-            }
-            else if (h > 0)
-            {
-                if (Math.random() < 0.5)
-                {
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-                else
-                {
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-            }
-            else // if (h == 0)
-            {
-                halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
-            }
-        }
-        else if (w > 0)
-        {
-            if (h < 0)
-            {
-                if (Math.random() < 0.5)
-                {
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});;
-                }
-                else
-                {
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-            }
-            else if (h > 0)
-            {
-                if (Math.random() < 0.5)
-                {
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point2.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-                else
-                {
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point2.columnNumber, rows: Math.abs(w), columns: 1});
-                    halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
-                }
-            }
-            else // if (h == 0)
-            {
-                halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: Math.abs(w), columns: 1});
-            }
-        }
-        else // if (w == 0)
-        {
-            if (h < 0)
-            {
-                halls.push({rowNumber: point2.rowNumber, columnNumber: point2.columnNumber, rows: 1, columns: Math.abs(h)});
-            }
-            else if (h > 0)
-            {
-                halls.push({rowNumber: point1.rowNumber, columnNumber: point1.columnNumber, rows: 1, columns: Math.abs(h)});
+            if (h < 0) {
+                halls.push({
+                    rowNumber: point2.rowNumber,
+                    columnNumber: point2.columnNumber,
+                    rows: 1,
+                    columns: Math.abs(h)
+                });
+            } else if (h > 0) {
+                halls.push({
+                    rowNumber: point1.rowNumber,
+                    columnNumber: point1.columnNumber,
+                    rows: 1,
+                    columns: Math.abs(h)
+                });
             }
         }
 
