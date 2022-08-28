@@ -1,13 +1,13 @@
 import getRandom from "../libraries/getRandom";
 
-export type roomCoords = {
+export type RoomCoords = {
     rowNumber: number,
     columnNumber: number,
     rows: number,
     columns: number;
 }
 
-export type point = {
+export type Point = {
     rowNumber: number,
     columnNumber: number
 };
@@ -20,7 +20,7 @@ export class Leaf {
     leftChild!: Leaf;
     rightChild!: Leaf;
     MIN_LEAF_SIZE: number;
-    room!: roomCoords;
+    room!: RoomCoords;
     halls!: number[];
     levelMap: string[][];
 
@@ -90,12 +90,12 @@ export class Leaf {
     //     return Math.floor(Math.random() * (maxRandom - minRandom + 1)) + minRandom;
     // }
 
-    getRoom(): roomCoords | null {
+    getRoom(): RoomCoords | null {
         if (this.room) {
             return this.room;
         } else {
-            let leftRoom: roomCoords | null = null;
-            let rightRoom: roomCoords | null = null;
+            let leftRoom: RoomCoords | null = null;
+            let rightRoom: RoomCoords | null = null;
 
             if (this.leftChild) {
                 leftRoom = this.leftChild.getRoom();
@@ -119,12 +119,12 @@ export class Leaf {
         }
     }
 
-    createHall(l: roomCoords | null, r: roomCoords | null) {
+    createHall(l: RoomCoords | null, r: RoomCoords | null) {
         // now we connect these two rooms together with hallways.
         // this looks pretty complicated, but it's just trying to figure out which point is where and then either draw a straight line, or a pair of lines to make a right-angle to connect them.
         // you could do some extra logic to make your halls more bendy, or do some more advanced things if you wanted.
 
-        const halls: roomCoords[] = [];
+        const halls: RoomCoords[] = [];
 
         const point1 = {
             rowNumber: getRandom(l!.rowNumber + 1, l!.rowNumber + l!.rows - 2),
