@@ -5,36 +5,27 @@ import {useCallback, useEffect, useState} from "react";
 import {Point} from "./levels/Leaf";
 
 export default function App() {
-    const [currentLevel, setCurrentLevel] = useState<string[][]>(Array([]));
     const [characterPosition, setCharacterPosition] = useState<Point>({rowNumber: 0, columnNumber: 0});
+    const [currentLevel, setCurrentLevel] = useState<string[][]>(Array([]));
+    const isAbleToMove = useCallback((newLocation: Point):boolean => {
+        return currentLevel[characterPosition.rowNumber + newLocation.rowNumber][characterPosition.columnNumber + newLocation.columnNumber] !== '#';
+    }, [characterPosition.columnNumber, characterPosition.rowNumber, currentLevel]);
+    const updateCharacterPosition = useCallback((up: number, right: number, key: string) => {
+        if(isAbleToMove({rowNumber: up, columnNumber: right})) {
+            setCharacterPosition(prevState => ({
+                rowNumber: prevState.rowNumber + up,
+                columnNumber: prevState.columnNumber + right
+            }));
+            const tempLevel = currentLevel;
+            tempLevel[characterPosition.rowNumber][characterPosition.columnNumber] = ' ';
+            tempLevel[characterPosition.rowNumber + up][characterPosition.columnNumber + right] = '@';
+            setCurrentLevel(tempLevel);
+        } else {
+            console.log("Would hit a wall");
+        }
 
-    useEffect(() => {
-        const generatedLevel: GeneratedLevel = levelGenerator();
-        setCurrentLevel(generatedLevel.level);
-        setCharacterPosition(generatedLevel.startingPosition);
-    }, []);
-
-    // Add event listeners
-    useEffect(() => {
-        window.addEventListener("keyup", upHandler);
-        // Remove event listeners on cleanup
-        return () => {
-            window.removeEventListener("keyup", upHandler);
-        };
-    }, [characterPosition]); // Empty array ensures that effect is only run on mount and unmount
-
-    const updateCharacterPosition = (up: number, right: number, key: string) => {
-        setCharacterPosition(prevState => ({
-            rowNumber: prevState.rowNumber + up,
-            columnNumber: prevState.columnNumber + right
-        }));
-        const tempLevel = currentLevel;
-        tempLevel[characterPosition.rowNumber][characterPosition.columnNumber] = ' ';
-        tempLevel[characterPosition.rowNumber + up][characterPosition.columnNumber + right] = '@';
-        setCurrentLevel(tempLevel);
-    };
-
-    const upHandler = ({key}: any) => {
+    }, [characterPosition.rowNumber, characterPosition.columnNumber, currentLevel, isAbleToMove]);
+    const upHandler = useCallback(({key}: any) => {
         switch (key) {
             case 'w':
                 updateCharacterPosition(-1, 0, key);
@@ -62,7 +53,21 @@ export default function App() {
                 break;
             default:
         }
-    };
+    }, [updateCharacterPosition]);
+
+    useEffect(() => {
+        const generatedLevel: GeneratedLevel = levelGenerator();
+        setCurrentLevel(generatedLevel.level);
+        setCharacterPosition(generatedLevel.startingPosition);
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener("keyup", upHandler);
+        // Remove event listeners on cleanup
+        return () => {
+            window.removeEventListener("keyup", upHandler);
+        };
+    }, [upHandler]);
 
     return (
         <>
